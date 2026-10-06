@@ -4,14 +4,25 @@ const CATEGORY_API = "https://dummyjson.com/products/categories";
 const productsContainer = document.querySelector("#products-container");
 const categoryFilters = document.querySelector("#category-filters");
 const searchInput = document.querySelector("#search-input");
+const wishlistCount = document.querySelector("#wishlist-count");
+
+
 
 let allCategories = [];
-let wishlistProducts = JSON.parse(localStorage.getItem("wishlist")) || [] ;
+// let wishlistProducts = JSON.parse(localStorage.getItem("wishlist")) || [] ;
 
 function formatCategory(category){
     return category.replace("-", " ");
 }
 
+function getItem(key)
+{
+    return JSON.parse(localStorage.getItem(key)) || [] ;
+}
+
+function setItem(key, data){
+    localStorage.setItem(key, JSON.stringify(data));
+}
 
 async function fetchProducts(url){
 
@@ -271,14 +282,51 @@ async function loadProductPage(){
 
             addToWishlistBtn.addEventListener("click", (e) =>{
                 e.preventDefault();
-                wishlistProducts.push(data);
-                localStorage.setItem("wishlist" , JSON.stringify(wishlistProducts));
-                console.log(wishlistProducts);
+                const wishlistProducts = getItem("wishlist");
+                if(wishlistProducts.length)
+                {
+
+
+                    
+                    for(let i = 0; i<wishlistProducts.length; i++)
+                    {
+                        if(wishlistProducts[i].id === data.id)
+                        {
+                            break;
+                        }
+                        // localStorage.setItem("wishlist" , JSON.stringify([data, ...wishlistProducts]));         
+                        setItem("wishlist", [data, ...wishlistProducts]);
+                    }
+
+
+                }
+                else{
+                     setItem("wishlist", [data, ...wishlistProducts]);
+                }
+                    console.log(wishlistProducts);
+                    updateWishListCount();
             })
 }
 
 loadProductPage();
 
+
+function loadWishListPage()
+{
+    const wishlistContainer = document.querySelector("#wishlist-container");
+    if(!wishlistContainer)
+    {
+        return;
+    }
+
+    const wishlistProducts = getItem("wishlist");
+
+    wishlistProducts.forEach(p =>{
+        
+    })
+}
+
+loadWishListPage();
 
 if(productsContainer)
 {
@@ -286,3 +334,11 @@ if(productsContainer)
     fetchProducts(API);
     fetchCategories();
 }
+
+
+function updateWishListCount()
+{
+    wishlistCount.textContent = getItem("wishlist").length;
+}
+
+updateWishListCount();
