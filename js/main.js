@@ -321,9 +321,67 @@ function loadWishListPage()
 
     const wishlistProducts = getItem("wishlist");
 
-    wishlistProducts.forEach(p =>{
-        
-    })
+    const outerDiv = document.createElement("div");
+    outerDiv.className = "bg-white border border-slate-200 rounded-lg divide-y divide-slate-200 overflow-hidden shadow-sm";
+
+    if(!wishlistContainer.length)
+    {
+        return;
+    }
+
+    wishlistContainer.innerHTML = "";
+    
+    wishlistProducts.forEach((data) => {
+    const { id, title, thumbnail, price } = data
+    const div = document.createElement("div");
+    div.className =
+      "p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-between";
+
+    const card = ` <div class="flex items-center gap-4 w-full sm:w-auto flex-1 min-w-0">
+                        <div
+                            class="w-16 h-16 sm:w-20 sm:h-20 bg-white border border-slate-200 rounded p-1.5 flex items-center justify-center shrink-0">
+                            <img src=${thumbnail}
+                                alt=${title} class="max-h-full max-w-full object-contain">
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <a href="product-details.html?id=${id}"
+                                class="text-sm font-semibold text-slate-900 hover:text-teal-700 line-clamp-2 transition"
+                                title=${title}>
+                                ${title}
+                            </a>
+                            <p class="text-sm font-bold text-slate-900 mt-1">₹${convertToINR(price)}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 w-full sm:w-auto shrink-0 justify-end">
+                        <button type="button"
+                        data-id=${id}
+                            class="wishlist-add-cart-btn inline-flex items-center justify-center gap-1.5 bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium py-2 px-4 rounded transition shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                            <span>Add to Cart</span>
+                        </button>
+                        <button type="button"
+                        data-id=${id}
+                            class="wishlist-remove-btn inline-flex items-center justify-center gap-1.5 text-slate-500 hover:text-red-600 border border-slate-300 hover:border-red-300 text-sm font-medium py-2 px-3 rounded transition"
+                            title="Remove from Wishlist">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
+                            <span>Remove from Wishlist</span>
+                        </button>
+                    </div>`;
+
+    div.innerHTML = card;
+    outerDiv.append(div);
+  });
+
+  wishlistContainer.append(outerDiv);
 }
 
 loadWishListPage();
